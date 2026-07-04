@@ -268,8 +268,8 @@ class Level:
         self.lava_timer += dt
 
     def is_in_lava(self, stick):
-        # GIF 顶部有 ~30px 空白，真正的岩浆从 lava_y + 30 开始
-        return stick.get_lowest_y() >= self.lava_y + 30
+        # GIF 顶部有 ~170px 空白，真正的岩浆从 lava_y + 170 开始
+        return stick.get_lowest_y() >= self.lava_y + 170
 
     # ---- 渲染 ----
     def draw(self, screen, camera_y, images, image_mgr=None):
@@ -369,7 +369,7 @@ class Level:
         if lava_height <= 0:
             return
 
-        # GIF 动画当前帧 → 缩放宽度=屏幕宽度，从 lava_top 开始向下平铺
+        # GIF 动画 → 拉伸填满整个岩浆区域，底部对齐屏幕底边
         lava_img = None
         if image_mgr:
             anim = image_mgr.get_animation("lava")
@@ -378,14 +378,5 @@ class Level:
             lava_img = images.get("lava")
 
         if lava_img:
-            lw = lava_img.get_width()
-            lh = lava_img.get_height()
-            new_h = max(lava_height, int(lh * SCREEN_WIDTH / lw))
-            scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, new_h))
-            # GIF 顶部 30px 空白 → 从 lava_top 绘制，真实岩浆从 +30px 处开始
-            y = lava_top
-            while y < SCREEN_HEIGHT:
-                screen.blit(scaled, (0, y))
-                y += new_h
-
-        # 岩浆动画本身就是判定区，不额外画红色引导线
+            scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, lava_height))
+            screen.blit(scaled, (0, lava_top))
