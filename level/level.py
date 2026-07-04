@@ -109,7 +109,8 @@ class Level:
             item_key = (rect.x, rect.y, etype)
             if item_key in self.consumed_items:
                 continue
-            if rect.collidepoint(x, y):
+            # 膨胀矩形：端点边缘碰到道具即可触发（与墙壁检测 radius 一致）
+            if rect.inflate(radius * 2, radius * 2).collidepoint(x, y):
                 self.consumed_items.add(item_key)
                 return (f"item_{etype}", item_obj)
         return None
