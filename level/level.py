@@ -379,11 +379,15 @@ class Level:
         if lava_img:
             lh = int(lava_img.get_height() * SCREEN_WIDTH / lava_img.get_width())
             scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, lh))
-            # 从屏幕底部开始向上平铺，岩浆从下往上填充
+            # 从底部向上平铺 — 岩浆图像的热区在底部
             pos = SCREEN_HEIGHT
-            while pos > lava_top - lh:
-                screen.blit(scaled, (0, pos - lh))
-                pos -= lh
+            while pos > lava_top:
+                # 裁切：只取当前行需要的部分，从缩放图底部往上取
+                needed = min(lh, pos - lava_top)
+                src_y = lh - needed
+                screen.blit(scaled, (0, pos - needed),
+                            (0, src_y, SCREEN_WIDTH, needed))
+                pos -= needed
 
         # 岩浆顶部发光
         for i in range(15):
