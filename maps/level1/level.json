@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "level_id": "level1",
+  "name": "First Oopz",
+  "world": {
+    "width": 640,
+    "height": 1120,
+    "tile_size": 32
+  },
+  "background": "arts/backgrounds/level_01_bg.png",
+  "music": "",
+  "player_start": {
+    "x": 288,
+    "y": 1072,
+    "angle": 270.0,
+    "anchor_side": "left",
+    "stick_image": "",
+    "left_ball_image": "",
+    "right_ball_image": "",
+    "ball_image": ""
+  },
+  "lava": {
+    "enabled": true,
+    "gif": "",
+    "start_y": 1100.0,
+    "rise_speed": 25.0,
+    "alpha": 160
+  },
+  "objects": [
+    {
+      "id": "wall_start",
+      "type": "wall",
+      "wall_type": "normal",
+      "x": 128,
+      "y": 1056,
+      "width": 352,
+      "height": 32,
+      "image_solid": "",
+      "image_ghost": "",
+      "isSolid": true
+    }
+  ]
+}

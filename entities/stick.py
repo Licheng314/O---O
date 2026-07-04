@@ -155,7 +155,15 @@ class Stick:
             # === 从旧墙壁脱锚 ===
             self._detach_from_current_wall()
 
-            # === 计算空中速度（用于后续可能的脱落） ===
+            # 脱锚可能触发了旧墙碎裂（脆弱墙）。如果新墙正是同一面墙，
+            # 它已经在 _detach_from_current_wall 中被设为 active=False，
+            # 此时应视为抓空而非重新抓住已碎的墙。
+            if not wall.active:
+                self.state = "airborne"
+                self.anchor_side = new_anchor_side
+                anchor_result = "anchor_miss"
+                item_str = item_result[0] if item_result else None
+                return (anchor_result, item_str)
             if self.state == "anchored":
                 # 这不应该发生（刚 detach 了），但保守处理
                 self._compute_airborne_velocity()

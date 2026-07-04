@@ -391,9 +391,17 @@ def _convert_wall(obj, props, paths, warnings):
 def _convert_item(obj, props, warnings):
     effect = props.get("effect", "LengthUp")
 
+    # prefab 映射：effect "LengthUp" → prefab "length_up"（供 loader effect_map 使用）
+    _effect_to_prefab = {
+        "LengthUp": "length_up", "LengthDown": "length_down",
+        "SpeedUp": "speed_up", "SpeedDown": "speed_down",
+        "KeyPair": "key", "Checkpoint": "checkpoint",
+    }
+
     item = {
         "id": obj.get("name", f"item_{obj.get('id', '?')}"),
         "type": "item",
+        "prefab": _effect_to_prefab.get(effect, "length_up"),
         "effect": effect,
         "x": int(obj.get("x", 0)),
         "y": int(obj.get("y", 0)),

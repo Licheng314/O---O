@@ -33,6 +33,6 @@
   },
   "lava": {
     "start_y": 1272,
-    "rise_speed": 25
+    "rise_speed": 25.0
   }
 }
