@@ -378,7 +378,10 @@ def _convert_wall(obj, props, paths, warnings):
             "start_delay": _to_float(props.get("move_start_delay", 0)),
         }
         if pid and pid in paths:
-            mc["path"] = paths[pid]
+            # path[0] 默认 = 墙壁初始中心位置，设计师不用画起点
+            wall_cx = w["x"] + w["width"] / 2
+            wall_cy = w["y"] + w["height"] / 2
+            mc["path"] = [[wall_cx, wall_cy]] + paths[pid]
         elif pid:
             warnings.add("E03", f"Walls 层 {w['id']}: path_id={pid} 未找到对应 Path 对象")
         components["moving"] = mc
