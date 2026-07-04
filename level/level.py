@@ -111,7 +111,9 @@ class Level:
                 continue
             # 精确碰撞：道具范围由地图设计师在 Tiled 中手动拖拽决定
             if rect.collidepoint(x, y):
-                self.consumed_items.add(item_key)
+                # 存档点和钥匙不加入 consumed_items——它们通过 item.active 控制可见性
+                if etype not in ("Checkpoint", "KeyPair"):
+                    self.consumed_items.add(item_key)
                 return (f"item_{etype}", item_obj)
         return None
 

@@ -206,8 +206,8 @@ class Stick:
         item_obj = item_result[1] if item_result else None
         item_str = item_result[0] if item_result else None
 
-        # KeyPair 钥匙道具：直接在 level 中触发，不走 stick.apply_item()
-        if item_obj is not None and item_obj.effect == "KeyPair":
+        # KeyPair / Checkpoint 道具：直接在 level 中触发，不走 stick.apply_item()
+        if item_obj is not None and item_obj.effect in ("KeyPair", "Checkpoint"):
             level.apply_item_to_stick(self, item_obj)
             item_str = None  # 不传给 Game 处理
 
