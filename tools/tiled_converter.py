@@ -330,7 +330,8 @@ def _convert_wall(obj, props, paths, warnings):
         "y": int(obj.get("y", 0)),
         "width": int(obj.get("width", 32)),
         "height": int(obj.get("height", 32)),
-        "image": props.get("image", ""),
+        "image_solid": props.get("image_solid", props.get("image", "")),
+        "image_ghost": props.get("image_ghost", ""),
         "isSolid": _to_bool(props.get("isSolid", True)),
     }
 

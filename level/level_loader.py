@@ -233,6 +233,10 @@ class LevelLoader:
 
         wall = Wall(x, y, w, h, wall_type, isSolid=is_solid)
 
+        # 自定义外观（设计师在 Tiled 中选图）
+        wall.appearance_solid = obj.get("image_solid", "")
+        wall.appearance_ghost = obj.get("image_ghost", "")
+
         # === 装配组件（核心：Tiled 属性 → 游戏行为） ===
         from entities.wall import create_component
 

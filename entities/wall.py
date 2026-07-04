@@ -857,8 +857,9 @@ class Wall:
         self.solid_locked = False
 
         # ---- 外观 ----
-        # 贴图路径（可选）
-        self.appearance = None
+        # 贴图路径（可选）— 设计师在 Tiled 中通过 file 选择器指定
+        self.appearance_solid = ""   # 实线墙贴图路径（isSolid=True 时使用）
+        self.appearance_ghost = ""   # 虚线墙贴图路径（isSolid=False 时使用）
         # 预制体名（如 "normal_wall"）
         self.prefab = f"{wall_type}_wall"
 
@@ -1210,7 +1211,7 @@ class Wall:
 
         # === 虚线墙：半透明虚线绘制 ===
         if not self.isSolid:
-            self._draw_ghost_wall(screen, camera_y)
+            self._draw_ghost_wall(screen, camera_y, images)
             return
 
         # wall_type → image key
@@ -1231,13 +1232,24 @@ class Wall:
         if sy + h < 0 or sy > screen_h:
             return
 
-        if img:
+        # 优先使用设计师自定义贴图（Tiled image_solid 属性）
+        custom_img = None
+        if self.appearance_solid:
+            custom_img = images.get(f"_custom_{self.id}_solid")
+            if custom_img is None and self.appearance_solid:
+                try:
+                    custom_img = pygame.image.load(self.appearance_solid).convert_alpha()
+                    images[f"_custom_{self.id}_solid"] = custom_img
+                except Exception:
+                    pass
+
+        draw_img = custom_img or img
+        if draw_img:
             # === 贴图平铺 ===
-            iw, ih = img.get_width(), img.get_height()
-            # 以贴图尺寸为步长水平+垂直平铺
+            iw, ih = draw_img.get_width(), draw_img.get_height()
             for tx in range(sx, sx + w, iw):
                 for ty in range(sy, sy + h, ih):
-                    screen.blit(img, (tx, ty))
+                    screen.blit(draw_img, (tx, ty))
         else:
             # === 纯色兜底 ===
             colors = {
@@ -1258,14 +1270,14 @@ class Wall:
             glow.fill((255, 220, 60, glow_alpha))  # 金色半透明
             screen.blit(glow, (sx - 4, sy - 4))
 
-    def _draw_ghost_wall(self, screen, camera_y):
+    def _draw_ghost_wall(self, screen, camera_y, images=None):
         """
         绘制虚线墙 / 虚体墙。
 
         特点：
         - 仍然显示在地图中
         - 不能被棍子抓住
-        - 淡蓝色半透明填充 + 虚线边框
+        - 若有自定义 ghost 贴图，使用半透明贴图；否则淡蓝填充 + 虚线边框
         """
         sx = int(self.x)
         sy = int(self.y - camera_y)
@@ -1276,17 +1288,53 @@ class Wall:
         if sy + h < 0 or sy > screen_h:
             return
 
-        # 半透明填充
+        # 优先使用设计师自定义 ghost 贴图
+        ghost_img = None
+        if self.appearance_ghost and images is not None:
+            cache_key = f"_custom_{self.id}_ghost"
+            ghost_img = images.get(cache_key)
+            if ghost_img is None:
+                try:
+                    ghost_img = pygame.image.load(self.appearance_ghost).convert_alpha()
+                    images[cache_key] = ghost_img
+                except Exception:
+                    pass
+
+        if ghost_img:
+            # 半透明平铺自定义贴图
+            ghost_surf = pygame.Surface((w, h), pygame.SRCALPHA)
+            iw, ih = ghost_img.get_width(), ghost_img.get_height()
+            for tx in range(0, w, iw):
+                for ty in range(0, h, ih):
+                    ghost_surf.blit(ghost_img, (tx, ty))
+            ghost_surf.set_alpha(100)  # 半透明
+            screen.blit(ghost_surf, (sx, sy))
+            # 仍画虚线边框
+            color = (150, 210, 255, 140)
+            dash = 8; gap = 6
+            x = sx
+            while x < sx + w:
+                end_x = min(x + dash, sx + w)
+                pygame.draw.line(screen, color, (x, sy), (end_x, sy), 2)
+                pygame.draw.line(screen, color, (x, sy + h), (end_x, sy + h), 2)
+                x += dash + gap
+            y = sy
+            while y < sy + h:
+                end_y = min(y + dash, sy + h)
+                pygame.draw.line(screen, color, (sx, y), (sx, end_y), 2)
+                pygame.draw.line(screen, color, (sx + w, y), (sx + w, end_y), 2)
+                y += dash + gap
+            return
+
+        # 兜底：淡蓝色半透明填充 + 虚线边框
         surf = pygame.Surface((w, h), pygame.SRCALPHA)
         surf.fill((120, 180, 255, 35))
         screen.blit(surf, (sx, sy))
 
-        # 虚线边框
         color = (150, 210, 255, 140)
         dash = 8
         gap = 6
 
-        # 上边 + 下边
         x = sx
         while x < sx + w:
             end_x = min(x + dash, sx + w)
@@ -1294,7 +1342,6 @@ class Wall:
             pygame.draw.line(screen, color, (x, sy + h), (end_x, sy + h), 2)
             x += dash + gap
 
-        # 左边 + 右边
         y = sy
         while y < sy + h:
             end_y = min(y + dash, sy + h)
