@@ -1,0 +1,35 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "Beat Solid Wall",
+    "width": 160,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "normal"
+      },
+      {
+        "name": "beat_solid_switch",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "switchSecond",
+        "type": "float",
+        "value": 2.0
+      },
+      {
+        "name": "start_solid",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+}

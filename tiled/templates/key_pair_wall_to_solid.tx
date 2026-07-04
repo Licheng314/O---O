@@ -1,0 +1,30 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "KeyPair -> Solid",
+    "width": 160,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "normal"
+      },
+      {
+        "name": "key_pair_solid",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "key_pair_result",
+        "type": "string",
+        "value": "solid"
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": false
+      }
+    ]
+  }
+}

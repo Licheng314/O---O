@@ -1,0 +1,15 @@
+{
+  "object": {
+    "type": "Hazard",
+    "name": "Spike",
+    "width": 32,
+    "height": 32,
+    "properties": [
+      {
+        "name": "trigger_condition",
+        "type": "string",
+        "value": "OnTouch"
+      }
+    ]
+  }
+}

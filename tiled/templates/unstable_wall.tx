@@ -1,0 +1,30 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "Unstable Wall",
+    "width": 160,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "normal"
+      },
+      {
+        "name": "unstable",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "max_tilt_angle",
+        "type": "float",
+        "value": 35
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+}

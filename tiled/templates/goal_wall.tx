@@ -1,0 +1,25 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "Goal Wall",
+    "width": 96,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "goal"
+      },
+      {
+        "name": "goal",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "Fragile Wall",
+    "width": 160,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "fragile"
+      },
+      {
+        "name": "fragile",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+}

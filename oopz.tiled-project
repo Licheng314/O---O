@@ -1,0 +1,153 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+        {
+            "arguments": "main.py",
+            "command": "python",
+            "enabled": true,
+            "name": "Run Game (F5)",
+            "saveBeforeExecute": true,
+            "shortcut": "F5",
+            "workingDirectory": "../.."
+        }
+    ],
+    "extensionsPath": "tiled/extensions",
+    "folders": [
+        "maps",
+        "arts",
+        "tiled/templates"
+    ],
+    "propertyTypes": [
+        {
+            "name": "MoveStrategy",
+            "storageType": "string",
+            "type": "enum",
+            "values": ["loop", "pingpong", "once"],
+            "valuesAsFlags": false
+        },
+        {
+            "name": "TriggerCondition",
+            "storageType": "string",
+            "type": "enum",
+            "values": ["OnAnchor", "OnTouch"],
+            "valuesAsFlags": false
+        },
+        {
+            "name": "TiltDirection",
+            "storageType": "string",
+            "type": "enum",
+            "values": ["both", "clockwise", "counter_clockwise"],
+            "valuesAsFlags": false
+        },
+        {
+            "name": "KeyPairResult",
+            "storageType": "string",
+            "type": "enum",
+            "values": ["solid", "ghost", "toggle"],
+            "valuesAsFlags": false
+        },
+        {
+            "name": "ItemEffect",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "LengthUp",
+                "LengthDown",
+                "SpeedUp",
+                "SpeedDown",
+                "KeyPair",
+                "Checkpoint"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "name": "WallType",
+            "storageType": "string",
+            "type": "enum",
+            "values": ["normal", "fragile", "goal"],
+            "valuesAsFlags": false
+        },
+        {
+            "name": "Wall",
+            "type": "class",
+            "useAs": ["object"],
+            "members": [
+                { "name": "wall_type",        "propertyType": "WallType", "type": "string", "value": "normal" },
+                { "name": "image",            "type": "file",   "value": "" },
+                { "name": "isSolid",          "type": "bool",   "value": true },
+
+                { "name": "fragile",          "type": "bool",   "value": false },
+                { "name": "break_on_detach",  "type": "bool",   "value": true },
+
+                { "name": "goal",             "type": "bool",   "value": false },
+
+                { "name": "moving",           "type": "bool",   "value": false },
+                { "name": "move_strategy",    "propertyType": "MoveStrategy", "type": "string", "value": "pingpong" },
+                { "name": "move_speed",       "type": "float",  "value": 80 },
+                { "name": "path_id",          "type": "string", "value": "" },
+
+                { "name": "unstable",         "type": "bool",   "value": false },
+                { "name": "max_tilt_angle",   "type": "float",  "value": 35 },
+                { "name": "tilt_direction",   "propertyType": "TiltDirection", "type": "string", "value": "both" },
+                { "name": "inertia",          "type": "float",  "value": 120 },
+                { "name": "torque_scale",     "type": "float",  "value": 1.0 },
+                { "name": "damping",          "type": "float",  "value": 1.5 },
+                { "name": "return_speed",     "type": "float",  "value": 20 },
+                { "name": "break_at_max_tilt","type": "bool",   "value": false },
+
+                { "name": "beat_solid_switch","type": "bool",   "value": false },
+                { "name": "switchSecond",     "type": "float",  "value": 2.0 },
+                { "name": "initial_delay",    "type": "float",  "value": 0.0 },
+                { "name": "start_solid",      "type": "bool",   "value": true },
+
+                { "name": "key_pair_solid",   "type": "bool",   "value": false },
+                { "name": "key_pair_id",      "type": "string", "value": "" },
+                { "name": "key_pair_result",  "propertyType": "KeyPairResult", "type": "string", "value": "solid" }
+            ]
+        },
+        {
+            "name": "Item",
+            "type": "class",
+            "useAs": ["object"],
+            "members": [
+                { "name": "effect",             "propertyType": "ItemEffect", "type": "string", "value": "LengthUp" },
+                { "name": "image",              "type": "file",   "value": "" },
+                { "name": "value",              "type": "float",  "value": 20 },
+                { "name": "trigger_condition",  "propertyType": "TriggerCondition", "type": "string", "value": "OnAnchor" },
+                { "name": "consume_on_trigger", "type": "bool",   "value": true },
+                { "name": "key_pair_id",        "type": "string", "value": "" },
+                { "name": "checkpoint_id",      "type": "string", "value": "" }
+            ]
+        },
+        {
+            "name": "Hazard",
+            "type": "class",
+            "useAs": ["object"],
+            "members": [
+                { "name": "image",              "type": "file",   "value": "" },
+                { "name": "trigger_condition",  "propertyType": "TriggerCondition", "type": "string", "value": "OnTouch" }
+            ]
+        },
+        {
+            "name": "PlayerStart",
+            "type": "class",
+            "useAs": ["object"],
+            "members": [
+                { "name": "angle",            "type": "float",  "value": 270 },
+                { "name": "anchor_side",      "type": "string", "value": "left" },
+                { "name": "stick_image",      "type": "file",   "value": "" },
+                { "name": "left_ball_image",  "type": "file",   "value": "" },
+                { "name": "right_ball_image", "type": "file",   "value": "" },
+                { "name": "ball_image",       "type": "file",   "value": "" }
+            ]
+        },
+        {
+            "name": "Path",
+            "type": "class",
+            "useAs": ["object"],
+            "members": [
+                { "name": "path_id", "type": "string", "value": "" }
+            ]
+        }
+    ]
+}

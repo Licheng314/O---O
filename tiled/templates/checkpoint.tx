@@ -1,0 +1,25 @@
+{
+  "object": {
+    "type": "Item",
+    "name": "Checkpoint",
+    "width": 64,
+    "height": 64,
+    "properties": [
+      {
+        "name": "effect",
+        "type": "string",
+        "value": "Checkpoint"
+      },
+      {
+        "name": "trigger_condition",
+        "type": "string",
+        "value": "OnTouch"
+      },
+      {
+        "name": "consume_on_trigger",
+        "type": "bool",
+        "value": false
+      }
+    ]
+  }
+}

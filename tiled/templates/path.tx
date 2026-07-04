@@ -1,0 +1,15 @@
+{
+  "object": {
+    "type": "Path",
+    "name": "Path",
+    "width": 0,
+    "height": 0,
+    "properties": [
+      {
+        "name": "path_id",
+        "type": "string",
+        "value": ""
+      }
+    ]
+  }
+}

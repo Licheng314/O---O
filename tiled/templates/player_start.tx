@@ -1,0 +1,20 @@
+{
+  "object": {
+    "type": "PlayerStart",
+    "name": "Player Start",
+    "width": 0,
+    "height": 0,
+    "properties": [
+      {
+        "name": "angle",
+        "type": "float",
+        "value": 270
+      },
+      {
+        "name": "anchor_side",
+        "type": "string",
+        "value": "left"
+      }
+    ]
+  }
+}

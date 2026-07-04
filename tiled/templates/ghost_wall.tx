@@ -1,0 +1,20 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "Ghost Wall",
+    "width": 160,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "normal"
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": false
+      }
+    ]
+  }
+}

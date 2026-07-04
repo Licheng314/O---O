@@ -1,0 +1,30 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "KeyPair -> Ghost",
+    "width": 160,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "normal"
+      },
+      {
+        "name": "key_pair_solid",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "key_pair_result",
+        "type": "string",
+        "value": "ghost"
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+}

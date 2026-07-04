@@ -1,0 +1,124 @@
+{
+  "backgroundcolor": "#1a1528",
+  "height": 35,
+  "infinite": false,
+  "layers": [
+    {
+      "draworder": "topdown",
+      "id": 6,
+      "name": "Decorations",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 5,
+      "name": "Paths",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 4,
+      "name": "Hazards",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 3,
+      "name": "Items",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Walls",
+      "objects": [
+        {
+          "height": 32,
+          "id": 1,
+          "name": "wall_start",
+          "type": "Wall",
+          "rotation": 0,
+          "visible": true,
+          "width": 352,
+          "x": 128,
+          "y": 1056,
+          "properties": [
+            { "name": "wall_type", "type": "string", "value": "normal" },
+            { "name": "isSolid", "type": "bool", "value": true }
+          ]
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 1,
+      "name": "Player",
+      "objects": [
+        {
+          "height": 0,
+          "id": 100,
+          "name": "spawn",
+          "point": true,
+          "type": "PlayerStart",
+          "rotation": 0,
+          "visible": true,
+          "width": 0,
+          "x": 288,
+          "y": 1072,
+          "properties": [
+            { "name": "angle", "type": "float", "value": 270 },
+            { "name": "anchor_side", "type": "string", "value": "left" }
+          ]
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 7,
+  "nextobjectid": 200,
+  "orientation": "orthogonal",
+  "properties": [
+    { "name": "level_id", "type": "string", "value": "level1" },
+    { "name": "level_name", "type": "string", "value": "First Oopz" },
+    { "name": "background", "type": "file", "value": "arts/backgrounds/level_01_bg.png" },
+    { "name": "lava_enabled", "type": "bool", "value": true },
+    { "name": "lava_start_y", "type": "float", "value": 1100 },
+    { "name": "lava_rise_speed", "type": "float", "value": 25 }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.10",
+  "tileheight": 32,
+  "tilewidth": 32,
+  "type": "map",
+  "version": "1.10",
+  "width": 20
+}

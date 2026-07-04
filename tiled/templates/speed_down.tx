@@ -1,0 +1,25 @@
+{
+  "object": {
+    "type": "Item",
+    "name": "Speed Down",
+    "width": 32,
+    "height": 32,
+    "properties": [
+      {
+        "name": "effect",
+        "type": "string",
+        "value": "SpeedDown"
+      },
+      {
+        "name": "value",
+        "type": "float",
+        "value": 0.2
+      },
+      {
+        "name": "trigger_condition",
+        "type": "string",
+        "value": "OnAnchor"
+      }
+    ]
+  }
+}

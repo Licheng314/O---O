@@ -1,0 +1,25 @@
+{
+  "object": {
+    "type": "Item",
+    "name": "Key",
+    "width": 32,
+    "height": 32,
+    "properties": [
+      {
+        "name": "effect",
+        "type": "string",
+        "value": "KeyPair"
+      },
+      {
+        "name": "trigger_condition",
+        "type": "string",
+        "value": "OnAnchor"
+      },
+      {
+        "name": "consume_on_trigger",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+}

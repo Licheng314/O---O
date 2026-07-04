@@ -1,0 +1,35 @@
+{
+  "object": {
+    "type": "Wall",
+    "name": "Moving Wall",
+    "width": 160,
+    "height": 32,
+    "properties": [
+      {
+        "name": "wall_type",
+        "type": "string",
+        "value": "normal"
+      },
+      {
+        "name": "moving",
+        "type": "bool",
+        "value": true
+      },
+      {
+        "name": "move_strategy",
+        "type": "string",
+        "value": "pingpong"
+      },
+      {
+        "name": "move_speed",
+        "type": "float",
+        "value": 80
+      },
+      {
+        "name": "isSolid",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+}

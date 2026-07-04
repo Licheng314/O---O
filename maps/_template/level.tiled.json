@@ -1,0 +1,105 @@
+{
+  "backgroundcolor": "#1a1528",
+  "height": 35,
+  "infinite": false,
+  "layers": [
+    {
+      "draworder": "topdown",
+      "id": 7,
+      "name": "Decorations",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 6,
+      "name": "Triggers",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 5,
+      "name": "Paths",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 4,
+      "name": "Hazards",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 3,
+      "name": "Items",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Walls",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 1,
+      "name": "Player",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 8,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": [
+    { "name": "level_id",         "type": "string", "value": "level_new" },
+    { "name": "level_name",       "type": "string", "value": "New Level" },
+    { "name": "background",       "type": "file",   "value": "" },
+    { "name": "music",            "type": "file",   "value": "" },
+    { "name": "lava_enabled",     "type": "bool",   "value": true },
+    { "name": "lava_gif",         "type": "file",   "value": "" },
+    { "name": "lava_start_y",     "type": "float",  "value": 1200 },
+    { "name": "lava_rise_speed",  "type": "float",  "value": 30 },
+    { "name": "lava_alpha",       "type": "int",    "value": 160 }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.10",
+  "tileheight": 32,
+  "tilewidth": 32,
+  "type": "map",
+  "version": "1.10",
+  "width": 20
+}
