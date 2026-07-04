@@ -368,7 +368,7 @@ class Level:
         if lava_height <= 0:
             return
 
-        # GIF 动画当前帧 — 缩放宽度=屏幕宽度，垂直平铺
+        # GIF 动画当前帧 — 缩放宽度=屏幕宽度，从底部对齐
         lava_img = None
         if image_mgr:
             anim = image_mgr.get_animation("lava")
@@ -379,26 +379,19 @@ class Level:
         if lava_img:
             lh = int(lava_img.get_height() * SCREEN_WIDTH / lava_img.get_width())
             scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, lh))
-            pos = lava_top
-            while pos < SCREEN_HEIGHT:
-                screen.blit(scaled, (0, pos))
-                pos += lh
-            for i in range(15):
-                alpha = 150 - i * 10
-                if alpha <= 0:
-                    break
-                edge_y = lava_top - i
-                if 0 <= edge_y < SCREEN_HEIGHT:
-                    glow_surf = pygame.Surface((SCREEN_WIDTH, 1), pygame.SRCALPHA)
-                    glow_surf.fill((255, 120, 30, alpha))
-                    screen.blit(glow_surf, (0, edge_y))
+            # 从屏幕底部开始向上平铺，岩浆从下往上填充
+            pos = SCREEN_HEIGHT
+            while pos > lava_top - lh:
+                screen.blit(scaled, (0, pos - lh))
+                pos -= lh
 
-        if lava_y_screen > SCREEN_HEIGHT - 100:
-            intensity = (SCREEN_HEIGHT - lava_y_screen) / 100
-            if intensity > 0:
-                alpha = int(40 * intensity)
-                vignette = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
-                for y in range(SCREEN_HEIGHT - 80, SCREEN_HEIGHT):
-                    edge_alpha = int(alpha * (y - (SCREEN_HEIGHT - 80)) / 80)
-                    pygame.draw.line(vignette, (255, 30, 10, edge_alpha), (0, y), (SCREEN_WIDTH, y))
-                screen.blit(vignette, (0, 0))
+        # 岩浆顶部发光
+        for i in range(15):
+            alpha = 150 - i * 10
+            if alpha <= 0:
+                break
+            edge_y = lava_top - i
+            if 0 <= edge_y < SCREEN_HEIGHT:
+                glow_surf = pygame.Surface((SCREEN_WIDTH, 1), pygame.SRCALPHA)
+                glow_surf.fill((255, 120, 30, alpha))
+                screen.blit(glow_surf, (0, edge_y))
