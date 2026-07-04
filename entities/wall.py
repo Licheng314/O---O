@@ -663,21 +663,36 @@ class KeyPairSolidComponent(WallComponent):
 
 def _try_load_image(path):
     """
-    尝试从多个路径解析加载贴图。
-    Tiled 的 file 选择器可能存储相对于 map、project 或绝对路径。
+    加载贴图。始终从项目根目录的 arts/ 出发搜索，不依赖 Tiled 存储的
+    相对路径（Tiled 存的是 ../ 相对于 map 文件的路径，打包后无效）。
     """
     import os as _os
-    candidates = [path]
-    # 也尝试相对于项目根目录
-    if not _os.path.isabs(path):
-        candidates.append(_os.path.join(_os.getcwd(), path))
-    for p in candidates:
-        try:
-            return pygame.image.load(p).convert_alpha()
-        except Exception:
-            continue
-    if path:
-        print(f"[Wall] 无法加载自定义贴图: {path}")
+    if not path:
+        return None
+
+    # 方案1：剥离 ../ 前缀后直接从 cwd 加载（适用于开发环境）
+    clean = path.replace("\\", "/")
+    while clean.startswith("../"):
+        clean = clean[3:]
+    try:
+        return pygame.image.load(clean).convert_alpha()
+    except Exception:
+        pass
+
+    # 方案2：在 arts/ 下按文件名搜索（适用于打包后）
+    filename = _os.path.basename(path)
+    if filename:
+        arts_dir = _os.path.join(_os.getcwd(), "arts")
+        if _os.path.isdir(arts_dir):
+            for root, _dirs, files in _os.walk(arts_dir):
+                if filename in files:
+                    try:
+                        return pygame.image.load(
+                            _os.path.join(root, filename)).convert_alpha()
+                    except Exception:
+                        continue
+
+    print(f"[Wall] cannot load custom image: {path}")
     return None
 
 
