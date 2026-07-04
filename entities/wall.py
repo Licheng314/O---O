@@ -792,7 +792,11 @@ class Wall:
     # __slots__ 减少内存开销，每个 Wall 实例只有这些属性
     __slots__ = (
         'id', 'x', 'y', 'width', 'height', 'wall_type',
-        'angle', 'active', 'appearance', 'prefab',
+        'angle', 'active', 'prefab',
+
+        # 自定义外观贴图（设计师在 Tiled 中通过 file 选择器指定）
+        'appearance_solid',   # 实线墙贴图（isSolid=True）
+        'appearance_ghost',   # 虚线墙贴图（isSolid=False）
 
         # 是否是实体墙。
         # True  = 实线墙，可以被棍子抓住。
@@ -1307,7 +1311,7 @@ class Wall:
             for tx in range(0, w, iw):
                 for ty in range(0, h, ih):
                     ghost_surf.blit(ghost_img, (tx, ty))
-            ghost_surf.set_alpha(100)  # 半透明
+            ghost_surf.set_alpha(128)  # 透明度 0.5
             screen.blit(ghost_surf, (sx, sy))
             # 仍画虚线边框
             color = (150, 210, 255, 140)
@@ -1328,7 +1332,7 @@ class Wall:
 
         # 兜底：淡蓝色半透明填充 + 虚线边框
         surf = pygame.Surface((w, h), pygame.SRCALPHA)
-        surf.fill((120, 180, 255, 35))
+        surf.fill((120, 180, 255, 128))  # 透明度 0.5
         screen.blit(surf, (sx, sy))
 
         color = (150, 210, 255, 140)
