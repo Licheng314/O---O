@@ -368,7 +368,7 @@ class Level:
         if lava_height <= 0:
             return
 
-        # GIF 动画当前帧 — 缩放宽度=屏幕宽度，从底部对齐
+        # GIF 动画当前帧 → 缩放宽度=屏幕宽度，从 lava_top 开始向下平铺
         lava_img = None
         if image_mgr:
             anim = image_mgr.get_animation("lava")
@@ -377,19 +377,18 @@ class Level:
             lava_img = images.get("lava")
 
         if lava_img:
-            lh = int(lava_img.get_height() * SCREEN_WIDTH / lava_img.get_width())
-            scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, lh))
-            # 从底部向上平铺 — 岩浆图像的热区在底部
-            pos = SCREEN_HEIGHT
-            while pos > lava_top:
-                # 裁切：只取当前行需要的部分，从缩放图底部往上取
-                needed = min(lh, pos - lava_top)
-                src_y = lh - needed
-                screen.blit(scaled, (0, pos - needed),
-                            (0, src_y, SCREEN_WIDTH, needed))
-                pos -= needed
+            lw = lava_img.get_width()
+            lh = lava_img.get_height()
+            # 缩放高度 = 使单帧覆盖整个可见岩浆区域
+            new_h = max(lava_height, int(lh * SCREEN_WIDTH / lw))
+            scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, new_h))
+            # 从 lava_top 开始平铺，顶部对齐
+            y = lava_top
+            while y < SCREEN_HEIGHT:
+                screen.blit(scaled, (0, y))
+                y += new_h
 
-        # 岩浆顶部发光
+        # 岩浆顶部发光过渡
         for i in range(15):
             alpha = 150 - i * 10
             if alpha <= 0:
