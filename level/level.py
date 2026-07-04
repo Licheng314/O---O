@@ -246,10 +246,13 @@ class Level:
 
     # ---- 更新 ----
     def update(self, dt, stick=None):
-        """每帧更新：墙壁组件 → 岩浆 → OnTouch 道具检测"""
+        """每帧更新：墙壁组件 → 岩浆 → 存档点检测 → OnTouch 道具检测"""
         for wall in self.walls:
             wall.update(dt)
         self.update_lava(dt)
+        # 岩浆淹没存档点 → 存档失效
+        if self.checkpoint_manager.has_checkpoint():
+            self.checkpoint_manager.check_lava_submerged(self.lava_y)
         if stick is not None:
             self.update_item_touch_triggers(stick)
 

@@ -21,6 +21,7 @@ class CheckpointManager:
     def __init__(self):
         self.active_checkpoint_id = None
         self.snapshot = None
+        self.checkpoint_y = None  # 存档点 Y 坐标，用于岩浆淹没检测
 
     def has_checkpoint(self):
         return self.snapshot is not None
@@ -28,6 +29,7 @@ class CheckpointManager:
     def clear(self):
         self.active_checkpoint_id = None
         self.snapshot = None
+        self.checkpoint_y = None
 
     # ================================================================
     #  激活存档点
@@ -36,18 +38,17 @@ class CheckpointManager:
     def activate_checkpoint(self, level, stick, checkpoint_item):
         """
         激活一个存档点。覆盖旧存档记录。
-
-        参数
-        ----
-        level : Level
-            当前关卡
-        stick : Stick
-            玩家棍子
-        checkpoint_item : Item
-            存档点道具（effect="Checkpoint"）
         """
         self.active_checkpoint_id = checkpoint_item.checkpoint_id
+        self.checkpoint_y = checkpoint_item.y + checkpoint_item.height  # 底部 Y
         self.snapshot = self.create_snapshot(level, stick)
+
+    def check_lava_submerged(self, lava_y):
+        """如果岩浆淹没存档点，清除存档"""
+        if self.checkpoint_y is not None and lava_y <= self.checkpoint_y:
+            self.clear()
+            return True
+        return False
 
     # ================================================================
     #  创建 snapshot
