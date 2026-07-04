@@ -378,10 +378,15 @@ def _convert_wall(obj, props, paths, warnings):
             "start_delay": _to_float(props.get("move_start_delay", 0)),
         }
         if pid and pid in paths:
-            # path[0] 默认 = 墙壁初始中心位置，设计师不用画起点
+            # path[0] = 墙壁中心（自动），后续点为相对上一个点的偏移量
             wall_cx = w["x"] + w["width"] / 2
             wall_cy = w["y"] + w["height"] / 2
-            mc["path"] = [[wall_cx, wall_cy]] + paths[pid]
+            rel_path = [[wall_cx, wall_cy]]
+            prev = [wall_cx, wall_cy]
+            for pt in paths[pid]:
+                rel_path.append([pt[0] - prev[0], pt[1] - prev[1]])
+                prev = pt
+            mc["path"] = rel_path
         elif pid:
             warnings.add("E03", f"Walls 层 {w['id']}: path_id={pid} 未找到对应 Path 对象")
         components["moving"] = mc
