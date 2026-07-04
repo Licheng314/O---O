@@ -206,8 +206,10 @@ class Stick:
         item_obj = item_result[1] if item_result else None
         item_str = item_result[0] if item_result else None
 
-        # KeyPair / Checkpoint 道具：直接在 level 中触发，不走 stick.apply_item()
-        if item_obj is not None and item_obj.effect in ("KeyPair", "Checkpoint"):
+        # JSON-loaded 道具（有 item_obj）：统一走 level.apply_item_to_stick()
+        # 这样 Tiled 中设置的自定义 value 才会生效（不走 ITEM_CONFIG 硬编码值）
+        # 文本地图道具（item_obj=None）：走旧路径 Game._handle_game_event
+        if item_obj is not None:
             level.apply_item_to_stick(self, item_obj)
             item_str = None  # 不传给 Game 处理
 
