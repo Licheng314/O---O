@@ -661,7 +661,7 @@ def _try_load_image(path):
                     except Exception:
                         continue
 
-    # 静默失败 — 设计师未自定义贴图时用默认贴图即可
+    # 设计师未自定义贴图 → 返回 None，draw() 用默认贴图
     return None
 
 

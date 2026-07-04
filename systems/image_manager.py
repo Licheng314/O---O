@@ -38,29 +38,20 @@ class GifAnimation:
 
 
 def _load_gif(path):
-    """从 GIF 文件提取所有帧"""
-    try:
-        from PIL import Image
-        pil_img = Image.open(path)
-        frames = []
-        durations = []
-        for i in range(pil_img.n_frames):
-            pil_img.seek(i)
-            duration = pil_img.info.get('duration', 100)
-            rgba = pil_img.convert('RGBA')
-            raw = rgba.tobytes('raw', 'RGBA')
-            surf = pygame.image.fromstring(raw, rgba.size, 'RGBA')
-            # convert_alpha 需要 display init，用 try 兜底
-            try:
-                surf = surf.convert_alpha()
-            except Exception:
-                pass
-            frames.append(surf)
-            durations.append(max(duration, 20))
-        return GifAnimation(frames, durations)
-    except Exception as e:
-        print(f"[ImageManager] GIF load failed: {path} — {e}")
-        return None
+    """从 GIF 文件提取所有帧。失败直接报错，不静默吞错。"""
+    from PIL import Image
+    pil_img = Image.open(path)
+    frames = []
+    durations = []
+    for i in range(pil_img.n_frames):
+        pil_img.seek(i)
+        duration = pil_img.info.get('duration', 100)
+        rgba = pil_img.convert('RGBA')
+        raw = rgba.tobytes('raw', 'RGBA')
+        surf = pygame.image.fromstring(raw, rgba.size, 'RGBA')
+        frames.append(surf)
+        durations.append(max(duration, 20))
+    return GifAnimation(frames, durations)
 
 
 class ImageManager:
@@ -68,44 +59,27 @@ class ImageManager:
 
     def __init__(self):
         self.images = {}
-        self.animations = {}  # GIF 动画对象
+        self.animations = {}
 
     def load(self, name, path, scale=None):
-        """加载图片，.gif 自动提取帧"""
+        """加载图片。找不到文件或加载失败直接报错。"""
         if not os.path.exists(path):
-            self.images[name] = None
-            return
-
+            raise FileNotFoundError(f"[ImageManager] 素材不存在: {path}")
         if path.lower().endswith('.gif'):
             anim = _load_gif(path)
-            if anim:
-                self.animations[name] = anim
-                self.images[name] = anim.frames[0]  # 首帧作为初始
-            else:
-                self.images[name] = None
+            self.animations[name] = anim
+            self.images[name] = anim.frames[0]
             return
-
-        try:
-            img = pygame.image.load(path).convert_alpha()
-            if scale:
-                img = pygame.transform.scale(img, scale)
-            self.images[name] = img
-        except Exception:
-            self.images[name] = None
+        img = pygame.image.load(path).convert_alpha()
+        if scale:
+            img = pygame.transform.scale(img, scale)
+        self.images[name] = img
 
     def get(self, name):
         return self.images.get(name)
 
     def get_animation(self, name):
-        """获取 GIF 动画对象（用于 update + 获取当前帧）"""
         return self.animations.get(name)
-
-    def get_frame(self, name):
-        """获取当前帧（静态图片直接返回，GIF 返回当前动画帧）"""
-        anim = self.animations.get(name)
-        if anim:
-            return anim.frames[anim._index]
-        return self.images.get(name)
 
     def clear(self):
         self.images.clear()
