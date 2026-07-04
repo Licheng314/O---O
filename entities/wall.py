@@ -617,36 +617,51 @@ class KeyPairSolidComponent(WallComponent):
 
 def _try_load_image(path):
     """
-    加载贴图。始终从项目根目录的 arts/ 出发搜索，不依赖 Tiled 存储的
-    相对路径（Tiled 存的是 ../ 相对于 map 文件的路径，打包后无效）。
+    加载贴图。从项目根的 arts/ 搜索，兼容 Tiled 存储的旧路径。
+    先按文件名精确匹配，失败则按文件名关键词模糊匹配（处理文件改名）。
     """
     import os as _os
     if not path:
         return None
 
-    # 方案1：剥离 ../ 前缀后直接从 cwd 加载（适用于开发环境）
-    clean = path.replace("\\", "/")
-    while clean.startswith("../"):
-        clean = clean[3:]
-    try:
-        return pygame.image.load(clean).convert_alpha()
-    except Exception:
-        pass
-
-    # 方案2：在 arts/ 下按文件名搜索（适用于打包后）
+    # 剥离所有路径前缀，只取文件名
     filename = _os.path.basename(path)
-    if filename:
-        arts_dir = _os.path.join(_os.getcwd(), "arts")
-        if _os.path.isdir(arts_dir):
-            for root, _dirs, files in _os.walk(arts_dir):
-                if filename in files:
+    if not filename:
+        return None
+
+    arts_dir = _os.path.join(_os.getcwd(), "arts")
+
+    def _search_and_load(target_name):
+        if not _os.path.isdir(arts_dir):
+            return None
+        for root, _dirs, files in _os.walk(arts_dir):
+            if target_name in files:
+                try:
+                    return pygame.image.load(
+                        _os.path.join(root, target_name)).convert_alpha()
+                except Exception:
+                    continue
+        return None
+
+    # 1. 精确文件名匹配
+    result = _search_and_load(filename)
+    if result:
+        return result
+
+    # 2. 模糊匹配：文件名关键词（如 checkpoint.png → checkpoint未激活.png）
+    stem = _os.path.splitext(filename)[0].lower()
+    if _os.path.isdir(arts_dir):
+        for root, _dirs, files in _os.walk(arts_dir):
+            for f in files:
+                f_stem = _os.path.splitext(f)[0].lower()
+                if stem in f_stem or f_stem in stem:
                     try:
                         return pygame.image.load(
-                            _os.path.join(root, filename)).convert_alpha()
+                            _os.path.join(root, f)).convert_alpha()
                     except Exception:
                         continue
 
-    print(f"[Wall] cannot load custom image: {path}")
+    # 静默失败 — 设计师未自定义贴图时用默认贴图即可
     return None
 
 

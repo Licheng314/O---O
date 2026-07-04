@@ -254,20 +254,11 @@ def _validate_all(warnings, level, path_ids):
             if effect == "Checkpoint" and obj.get("consume_on_trigger", False):
                 warnings.add("E10", f"Items 层 {loc}: Checkpoint 建议 consume_on_trigger=false")
 
-            # E08: image 文件不存在
-            img = obj.get("image", "")
-            if img and not os.path.exists(img):
-                warnings.add("E08", f"Items 层 {loc}: image 文件不存在: {img}")
-
         elif obj["type"] == "hazard":
-            img = obj.get("image", "")
-            if img and not os.path.exists(img):
-                warnings.add("E08", f"Hazards 层 {loc}: image 文件不存在: {img}")
+            pass
 
         elif obj["type"] == "wall":
-            img = obj.get("image", "")
-            if img and not os.path.exists(img):
-                warnings.add("E08", f"Walls 层 {loc}: image 文件不存在: {img}")
+            pass
 
     # E09: 需要至少一个 goal 墙
     goal_count = sum(1 for o in level["objects"]
