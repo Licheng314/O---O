@@ -614,6 +614,10 @@ class KeyPairSolidComponent(WallComponent):
 #  贴图加载辅助
 # ================================================================
 
+# 自定义贴图缓存 — {wall_id: (path, Surface)}，path 变了重新加载
+_custom_img_cache = {}
+
+
 def _try_load_image(path):
     """
     加载贴图。从项目根的 arts/ 搜索，兼容 Tiled 存储的旧路径。
@@ -1252,11 +1256,13 @@ class Wall:
         # 优先使用设计师自定义贴图（Tiled image_solid 属性）
         custom_img = None
         if self.appearance_solid:
-            custom_img = images.get(f"_custom_{self.id}_solid")
-            if custom_img is None:
+            cached = _custom_img_cache.get(self.id)
+            if cached is not None and cached[0] == self.appearance_solid:
+                custom_img = cached[1]
+            else:
                 custom_img = _try_load_image(self.appearance_solid)
                 if custom_img:
-                    images[f"_custom_{self.id}_solid"] = custom_img
+                    _custom_img_cache[self.id] = (self.appearance_solid, custom_img)
 
         draw_img = custom_img or img
         if draw_img:
@@ -1306,12 +1312,14 @@ class Wall:
         # 优先使用设计师自定义 ghost 贴图
         ghost_img = None
         if self.appearance_ghost and images is not None:
-            cache_key = f"_custom_{self.id}_ghost"
-            ghost_img = images.get(cache_key)
-            if ghost_img is None:
+            cache_key = f"_ghost_{self.id}"
+            cached = _custom_img_cache.get(cache_key)
+            if cached is not None and cached[0] == self.appearance_ghost:
+                ghost_img = cached[1]
+            else:
                 ghost_img = _try_load_image(self.appearance_ghost)
                 if ghost_img:
-                    images[cache_key] = ghost_img
+                    _custom_img_cache[cache_key] = (self.appearance_ghost, ghost_img)
 
         if ghost_img:
             # 半透明平铺自定义贴图
