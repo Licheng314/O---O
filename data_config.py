@@ -22,16 +22,16 @@ MAP_ROWS = 35  # 地图高度（格子数）
 GAME_AREA_X = (SCREEN_WIDTH - MAP_COLS * TILE_SIZE) // 2  # 游戏区域左边距
 
 # =========================
-# 颜色定义
+# 颜色定义（海难主题 — 蓝色调）
 # =========================
-COLOR_BG = (15, 12, 25)
-COLOR_MENU_BG = (10, 8, 20)
-COLOR_LAVA_GLOW = (255, 40, 10, 30)
-COLOR_WHITE = (240, 240, 250)
-COLOR_GRAY = (150, 150, 160)
-COLOR_DARK = (30, 25, 40)
-COLOR_GOLD = (255, 220, 60)
-COLOR_RED = (255, 60, 40)
+COLOR_BG = (10, 20, 50)
+COLOR_MENU_BG = (5, 15, 40)
+COLOR_LAVA_GLOW = (60, 140, 255, 30)
+COLOR_WHITE = (220, 235, 255)
+COLOR_GRAY = (140, 160, 190)
+COLOR_DARK = (15, 30, 60)
+COLOR_GOLD = (80, 200, 255)
+COLOR_RED = (255, 100, 80)
 COLOR_GREEN = (60, 220, 80)
 COLOR_BLUE = (60, 140, 255)
 

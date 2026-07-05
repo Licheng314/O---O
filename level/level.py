@@ -268,8 +268,8 @@ class Level:
         self.lava_timer += dt
 
     def is_in_lava(self, stick):
-        # GIF 顶部有 ~170px 空白，真正的岩浆从 lava_y + 170 开始
-        return stick.get_lowest_y() >= self.lava_y + 170
+        # GIF 顶部有 ~90px 空白，真正的岩浆从 lava_y + 90 开始
+        return stick.get_lowest_y() >= self.lava_y + 90
 
     # ---- 渲染 ----
     def draw(self, screen, camera_y, images, image_mgr=None):

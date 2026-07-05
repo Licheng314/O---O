@@ -463,6 +463,7 @@ class Game:
             self._draw_menu_bg()
             rdr.draw_main_menu_ui(self.screen, self.fonts, self.menu_time, screen_w, screen_h)
             rdr.draw_menu_stick_animation(self.screen, self.menu_stick_angle, self.menu_time, screen_w)
+            self._draw_menu_wave()
 
         elif self.state == GameState.PLAYING:
             self._draw_game_scene()
@@ -495,7 +496,7 @@ class Game:
         self.stick.draw(self.screen, camera_y, self.image_mgr.images)
 
     def _draw_menu_bg(self):
-        """菜单背景：用天空图片平铺"""
+        """菜单背景：天空 + 蓝色海难色调"""
         sky = self.image_mgr.get("sky")
         if sky:
             sky_h = int(sky.get_height() * SCREEN_WIDTH / sky.get_width())
@@ -503,7 +504,20 @@ class Game:
             for y in range(0, SCREEN_HEIGHT, sky_h):
                 self.screen.blit(sky_scaled, (0, y))
         else:
-            self.screen.fill(C_BG)
+            self.screen.fill((10, 20, 50))  # 深蓝色
+
+    def _draw_menu_wave(self):
+        """菜单底部波浪 — 让玩家第一眼就知道要逃离什么"""
+        wave_h = 150
+        lava_img = None
+        anim = self.image_mgr.get_animation("lava")
+        if anim:
+            lava_img = anim.current_frame
+        if not lava_img:
+            lava_img = self.image_mgr.get("lava")
+        if lava_img:
+            scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, wave_h))
+            self.screen.blit(scaled, (0, SCREEN_HEIGHT - wave_h))
 
     def _draw_bg(self):
         """绘制背景：先铺 sky.png 无限平铺，再叠 背景.png 从地图底部向上"""
