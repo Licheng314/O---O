@@ -751,9 +751,9 @@ def draw_main_menu_ui(screen, fonts, time_seconds, screen_w, screen_h):
     line_surf.fill((*c("ice_cyan"), alpha))
     screen.blit(line_surf, (cx - line_w // 2, line_y))
 
-    # 操作提示 — 浮动动画
+    # 操作提示 — 浮动动画（避开底部海浪）
     float_offset = int(math.sin(time_seconds * 2.5) * 6)
-    base_y = screen_h - 120
+    base_y = screen_h - 200
 
     # SPACE — START / ANCHOR（霓虹脉冲）
     draw_neon_text(
