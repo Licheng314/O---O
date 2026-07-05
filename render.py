@@ -834,14 +834,22 @@ def draw_win_overlay(screen, fonts, time_seconds, screen_w, screen_h):
         time_seconds
     )
 
-    # PRESS R — 柔和闪烁
+    # 操作提示
     draw_soft_blink_text(
         screen,
-        "PRESS  R  TO RETRY",
+        "SPACE  -  NEXT LEVEL",
         fonts.get("ui_medium"),
-        (screen_w // 2, screen_h // 2 + 90),
-        time_seconds,
-        text_color="ice_cyan"
+        (screen_w // 2, screen_h // 2 + 80),
+        time_seconds
+    )
+    draw_text(
+        screen,
+        "R  -  RETRY",
+        fonts.get("ui_small"),
+        (screen_w // 2, screen_h // 2 + 130),
+        text_color="pure_white",
+        center=True,
+        alpha=180
     )
 
 
