@@ -128,13 +128,13 @@ class Game:
             PARTICLE_CONFIG["anchor_spark_lifetime"]
         )
         self.screen_shake = 0.08
-        self.sound_mgr.play("anchor_success")
+        self.sound_mgr.play_random("anchor_attach", "arts/sounds/attach")
         self._spawn_bubble_at_stick("snap")
 
     def _on_anchor_fragile(self, data):
         pos = data.get("position", (self.stick.center_x, self.stick.center_y))
         self.particles.emit_sparks(pos[0], pos[1], 15, (180, 180, 200), 200, 0.4)
-        self.sound_mgr.play("anchor_fragile")
+        self.sound_mgr.play_random("anchor_attach", "arts/sounds/attach")
         self._spawn_bubble_at_stick("fragile")
 
     def _on_anchor_miss(self, data):
