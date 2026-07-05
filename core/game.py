@@ -54,6 +54,9 @@ class Game:
         self.fonts.load()
         self.bubbles = rdr.BubbleManager()
 
+        # 关卡进度
+        self.current_level_id = "level1"
+
         # 菜单动画
         self.menu_time = 0.0
         self.menu_stick_angle = 0.0
@@ -125,13 +128,13 @@ class Game:
             PARTICLE_CONFIG["anchor_spark_lifetime"]
         )
         self.screen_shake = 0.08
-        self.sound_mgr.play("anchor_success")
+        self.sound_mgr.play_random("anchor_attach", "arts/sounds/attach")
         self._spawn_bubble_at_stick("snap")
 
     def _on_anchor_fragile(self, data):
         pos = data.get("position", (self.stick.center_x, self.stick.center_y))
         self.particles.emit_sparks(pos[0], pos[1], 15, (180, 180, 200), 200, 0.4)
-        self.sound_mgr.play("anchor_fragile")
+        self.sound_mgr.play_random("anchor_attach", "arts/sounds/attach")
         self._spawn_bubble_at_stick("fragile")
 
     def _on_anchor_miss(self, data):
@@ -174,10 +177,14 @@ class Game:
         self.sound_mgr.play(etype.lower())
 
     # ---- 关卡加载 ----
-    def start_game(self):
-        """初始化/重新开始游戏"""
+    def start_game(self, level_id=None):
+        """初始化/重新开始游戏。不传 level_id 则从当前关卡开始。"""
+        if level_id is None:
+            level_id = self.current_level_id
+        else:
+            self.current_level_id = level_id
         try:
-            self.level = LevelLoader.load("level1")
+            self.level = LevelLoader.load(level_id)
         except Exception as e:
             print(f"从 maps/ 加载关卡失败: {e}，使用内置实验关卡")
             self.level = self._create_fallback_level()
@@ -252,6 +259,19 @@ class Game:
         else:
             self.start_game()
 
+    def next_level(self):
+        """进入下一关（level1 → level2 → level3 ...）"""
+        import re, os
+        match = re.match(r"level(\d+)", self.current_level_id)
+        if match:
+            n = int(match.group(1)) + 1
+            next_id = f"level{n}"
+            if os.path.exists(f"maps/{next_id}"):
+                self.current_level_id = next_id
+                self.start_game()
+                return
+        print(f"[Game] 没有下一关: {self.current_level_id}")
+
     def _restore_from_checkpoint(self):
         """从存档点恢复"""
         ok = self.level.checkpoint_manager.restore(
@@ -323,6 +343,8 @@ class Game:
                     self.start_game()
                 elif self.state == GameState.PLAYING:
                     self.queue_event("space")
+                elif self.state == GameState.WIN:
+                    self.next_level()
             elif evt == "toggle_debug":
                 self.debug = not self.debug
             elif evt == "restart":

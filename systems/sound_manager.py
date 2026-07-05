@@ -4,6 +4,7 @@ systems/sound_manager.py
 """
 
 import os
+import random
 import pygame
 
 
@@ -36,6 +37,33 @@ class SoundManager:
                 self.sounds[name].play()
             except Exception:
                 pass
+
+    def play_random(self, name, folder):
+        """
+        从文件夹中随机选一个 wav 播放。首次调用时加载文件夹中所有 wav。
+        name: 缓存键（如 'anchor_attach'）
+        folder: 文件夹路径（如 'arts/sounds/attach'）
+        """
+        if not self.enabled:
+            return
+        cache_key = f"_random_{name}"
+        if cache_key not in self.sounds:
+            # 首次：扫描文件夹加载所有 wav
+            if os.path.isdir(folder):
+                pool = []
+                for f in sorted(os.listdir(folder)):
+                    if f.lower().endswith('.wav'):
+                        fp = os.path.join(folder, f)
+                        try:
+                            pool.append(pygame.mixer.Sound(fp))
+                        except Exception:
+                            pass
+                self.sounds[cache_key] = pool if pool else None
+            else:
+                self.sounds[cache_key] = None
+        pool = self.sounds.get(cache_key)
+        if pool:
+            random.choice(pool).play()
 
     def load_all(self, sound_config):
         """从配置字典批量加载"""
