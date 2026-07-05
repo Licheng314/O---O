@@ -380,5 +380,7 @@ class Level:
             lava_img = images.get("lava")
 
         if lava_img:
-            scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH, lava_height))
-            screen.blit(scaled, (0, lava_top))
+            # 左右扩展 80px 防止摄像机横向晃动时露出背景
+            pad = 80
+            scaled = pygame.transform.scale(lava_img, (SCREEN_WIDTH + pad * 2, lava_height))
+            screen.blit(scaled, (-pad, lava_top))
