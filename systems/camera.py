@@ -135,11 +135,11 @@ class SeaCameraBob:
     MAX_Y_AMP = 20.0   # 纵向最大漂移像素（靠近海浪时才达到）
 
     # ═══════════════════════════════════════════════════════════════
-    #  纵向衰减 — 离海浪越远晃动越小
+    #  纵向频率衰减 — 离海浪越远晃动越慢（幅度不变，只改频率）
     #  intensity = DECAY ^ d （d=距离海浪的像素数）
-    #  DECAY 越小衰减越快，0.998 表示每 100px 减弱约 18%
+    #  DECAY 越小衰减越快，0.998 表示每 100px 频率减弱约 18%
     # ═══════════════════════════════════════════════════════════════
-    DECAY = 0.998   # 衰减系数（0~1，<1 越远越弱）
+    DECAY = 0.998   # 频率衰减系数（0~1，<1 越远越慢）
 
     # ================================================================
     #  以下为逻辑代码，美术一般不需要修改
@@ -179,7 +179,8 @@ class SeaCameraBob:
         x_norm = self._sum_waves(self.x_waves, 1.0)
         offset_x = self.MAX_X_AMP * x_norm
 
-        amp_y = self.MAX_Y_AMP * intensity
+        # 幅度不变，只有频率随距离衰减
+        amp_y = self.MAX_Y_AMP
         speed_y = intensity
         y_norm = self._sum_waves(self.y_waves, speed_y)
         offset_y = amp_y * y_norm
