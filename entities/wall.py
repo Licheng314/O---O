@@ -135,9 +135,8 @@ class PingPongMoveStrategy(MoveStrategy):
     def __init__(self, path_points, move_speed=80):
         super().__init__(path_points, move_speed)
         if len(self.path) >= 2:
-            # 构建往返路径: A→B→C→B→A (不含重复端点)
-            # path[-2:0:-1] 从倒数第二个元素反向取到第二个元素
-            self._full_path = self.path + self.path[-2:0:-1]
+            # 构建往返路径: A→B→C→B→A（包含最后一段 A 保证无缝循环）
+            self._full_path = self.path + self.path[-2::-1]
         else:
             self._full_path = self.path[:]
         self._total = MoveStrategy._calc_total(self._full_path, loop=False)

@@ -92,8 +92,11 @@ class CheckpointManager:
         for wall in walls:
             wd = {
                 "active": wall.active,
+                "wall_type": wall.wall_type,
                 "isSolid": wall.isSolid,
                 "solid_locked": wall.solid_locked,
+                "appearance_solid": wall.appearance_solid,
+                "appearance_ghost": wall.appearance_ghost,
                 "x": wall.x, "y": wall.y,
                 "width": wall.width, "height": wall.height,
                 "angle": wall.angle,
@@ -190,8 +193,11 @@ class CheckpointManager:
                 continue
 
             w.active = wd["active"]
+            w.wall_type = wd.get("wall_type", w.wall_type)
             w.isSolid = wd.get("isSolid", True)
             w.solid_locked = wd.get("solid_locked", False)
+            w.appearance_solid = wd.get("appearance_solid", "")
+            w.appearance_ghost = wd.get("appearance_ghost", "")
             w.x = wd["x"]; w.y = wd["y"]
             w.width = wd["width"]; w.height = wd["height"]
             w.angle = wd.get("angle", 0.0)
