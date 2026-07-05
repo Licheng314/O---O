@@ -520,28 +520,31 @@ class Game:
             self.screen.blit(scaled, (0, SCREEN_HEIGHT - wave_h))
 
     def _draw_bg(self):
-        """绘制背景：先铺 sky.png 无限平铺，再叠 背景.png 从地图底部向上"""
+        """绘制背景：远景（sky+背景图）以 1/5 速度滚动，近景以全速滚动"""
         bg = self.image_mgr.get("level_bg")
         sky = self.image_mgr.get("sky")
         screen_w, screen_h = SCREEN_WIDTH, SCREEN_HEIGHT
 
-        # 1. 先铺满天空（从屏幕顶到底），消除任何空白/重影
+        # 视差：远景滚动速度 = 近景的 1/5
+        ratio = 5.0
+        p_y = self.camera.y / ratio
+
+        # 1. 天空无限平铺（远景速度）
         if sky:
             sky_h = int(sky.get_height() * SCREEN_WIDTH / sky.get_width())
             sky_scaled = pygame.transform.scale(sky, (SCREEN_WIDTH, sky_h))
-            # 用 camera.y 偏移实现向上无限循环
-            y = - (self.camera.y % sky_h)
+            y = - (p_y % sky_h)
             while y < screen_h:
                 self.screen.blit(sky_scaled, (0, int(y)))
                 y += sky_h
         else:
             self.screen.fill(C_BG)
 
-        # 2. 背景图叠在天空上面，底部对齐地图底部
+        # 2. 背景图底部对齐地图底部（远景速度）
         if bg:
             bg_h = int(bg.get_height() * SCREEN_WIDTH / bg.get_width())
             bg_scaled = pygame.transform.scale(bg, (SCREEN_WIDTH, bg_h))
-            bg_screen_y = self.level.height - self.camera.y
+            bg_screen_y = self.level.height / ratio - p_y
             self.screen.blit(bg_scaled, (0, bg_screen_y - bg_h))
 
     # ---- 主循环 ----
