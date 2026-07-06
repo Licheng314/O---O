@@ -26,34 +26,47 @@ def smoothstep(x):
 # ================================================================
 
 class Camera:
-    """平滑跟随相机 + 海上漂浮偏移"""
+    """平滑跟随相机 + 海上漂浮偏移，X/Y 双轴跟踪"""
 
-    def __init__(self, y, map_height, dead_zone=80):
+    def __init__(self, y, map_height, map_width=640, dead_zone=80):
+        self.x = 0.0
         self.y = y
+        self.target_x = 0.0
         self.target_y = y
         self.map_height = map_height
-        self.smooth_speed = 10.0  # 摄像机跟随速率，越大越快
+        self.map_width = map_width
+        self.smooth_speed = 4.0  # 平滑系数
         self.dead_zone = dead_zone
         self.bob_x = 0.0
         self.bob_y = 0.0
 
-    def set_target(self, follow_y):
-        """玩家在屏幕 CAMERA_VIEW_RATIO 处（0.6=偏下，上方留60%空间）"""
-        ideal = follow_y - SCREEN_HEIGHT * CAMERA_VIEW_RATIO
+    def set_target(self, follow_x, follow_y):
+        """玩家在屏幕 CAMERA_VIEW_RATIO 处，水平居中"""
+        ideal_y = follow_y - SCREEN_HEIGHT * CAMERA_VIEW_RATIO
         max_y = max(0, self.map_height - SCREEN_HEIGHT)
-        ideal = max(0.0, min(ideal, max_y))
-        if abs(ideal - self.target_y) > self.dead_zone:
-            self.target_y = ideal
+        ideal_y = max(0.0, min(ideal_y, max_y))
+        if abs(ideal_y - self.target_y) > self.dead_zone:
+            self.target_y = ideal_y
+
+        # X 轴：棍子水平居中
+        ideal_x = follow_x - 400  # SCREEN_WIDTH/2
+        max_x = max(0, self.map_width - 800)
+        ideal_x = max(0.0, min(ideal_x, max_x))
+        if abs(ideal_x - self.target_x) > 40:
+            self.target_x = ideal_x
 
     def update(self, dt):
-        diff = self.target_y - self.y
-        self.y += diff * min(1.0, self.smooth_speed * dt)
+        dx = self.target_x - self.x
+        dy = self.target_y - self.y
+        self.x += dx * min(1.0, self.smooth_speed * dt)
+        self.y += dy * min(1.0, self.smooth_speed * dt)
 
     def apply_shake(self, amount=5):
         self.y += random.uniform(-amount, amount)
 
     def world_to_screen(self, world_x, world_y):
-        return (int(world_x + self.bob_x), int(world_y - self.y + self.bob_y))
+        return (int(world_x - self.x + self.bob_x),
+                int(world_y - self.y + self.bob_y))
 
 
 # ================================================================

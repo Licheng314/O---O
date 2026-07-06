@@ -250,7 +250,8 @@ class Game:
 
         self.camera = Camera(
             y=max(0, self.stick.center_y - SCREEN_HEIGHT * 0.45),
-            map_height=self.level.height
+            map_height=self.level.height,
+            map_width=self.level.width
         )
 
         self.level.lava_y = player_start[1] + LAVA_CONFIG["start_y_below_player"]
@@ -412,10 +413,10 @@ class Game:
             self.bubbles.update(dt)
             return
 
-        # 入场提示计时
+        # 入场提示期间冻结所有游戏逻辑（包括岩浆）
         if self.intro_timer > 0:
             self.intro_timer -= dt
-            return
+            return  # level.update() 不会执行，岩浆不涨
 
         # PLAYING 状态 — 检测状态变化
         if self._prev_stick_state is not None:
@@ -452,12 +453,12 @@ class Game:
             self._handle_death("fall")
             return
 
-        # 更新相机
-        # 锚定时跟踪锚点端（固定不动），空中时跟踪质心
+        # 更新相机（X/Y 双轴跟随）
         if self.stick.state == "anchored":
-            self.camera.set_target(self.stick.get_anchor_endpoint()[1])
+            anchor = self.stick.get_anchor_endpoint()
+            self.camera.set_target(anchor[0], anchor[1])
         else:
-            self.camera.set_target(self.stick.center_y)
+            self.camera.set_target(self.stick.center_x, self.stick.center_y)
         self.camera.update(dt)
 
         # 海上漂浮晃动 — 平滑过渡到目标值
@@ -584,17 +585,16 @@ class Game:
         pygame.display.flip()
 
     def _draw_game_scene(self):
-        """绘制游戏场景（背景直接在屏幕，关卡/粒子/棍子通过偏移表面实现横向漂浮）"""
+        """绘制游戏场景 — 摄像机偏移 + 海上漂浮"""
         self._draw_bg()
-        camera_y = self.camera.y + int(self.camera.bob_y)
-        bob_x = int(self.camera.bob_x)
-        # 固定宽度表面，bob_x 在 ±40 范围，80px 余量足够
-        pad = 80
+        cam_y = self.camera.y + int(self.camera.bob_y)
+        offset_x = int(-self.camera.x + self.camera.bob_x)
+        pad = 120
         tmp = pygame.Surface((SCREEN_WIDTH + pad * 2, SCREEN_HEIGHT), pygame.SRCALPHA)
-        self.level.draw(tmp, camera_y, self.image_mgr.images, self.image_mgr)
-        self.particles.draw(tmp, camera_y)
-        self.stick.draw(tmp, camera_y, self.image_mgr.images)
-        self.screen.blit(tmp, (bob_x - pad, 0))
+        self.level.draw(tmp, cam_y, self.image_mgr.images, self.image_mgr)
+        self.particles.draw(tmp, cam_y)
+        self.stick.draw(tmp, cam_y, self.image_mgr.images)
+        self.screen.blit(tmp, (offset_x - pad, 0))
 
     def _draw_menu_bg(self):
         """菜单背景：天空 + 蓝色海难色调"""
