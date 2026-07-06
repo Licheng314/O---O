@@ -4,9 +4,9 @@
 a = Analysis(
     ['main.py'],
     pathex=[],
-    binaries=[],
+    binaries=[('C:/ProgramData/anaconda3/Library/bin/tiff.dll', '.'), ('C:/ProgramData/anaconda3/Library/bin/zlib.dll', '.'), ('C:/ProgramData/anaconda3/Library/bin/libjpeg.dll', '.'), ('C:/ProgramData/anaconda3/Library/bin/libwebp.dll', '.'), ('C:/ProgramData/anaconda3/Library/bin/liblzma.dll', '.'), ('C:/ProgramData/anaconda3/Library/bin/freetype.dll', '.'), ('C:/ProgramData/anaconda3/Library/bin/lcms2.dll', '.')],
     datas=[('arts', 'arts'), ('maps', 'maps'), ('tiled', 'tiled'), ('data_config.py', '.'), ('render.py', '.'), ('core', 'core'), ('entities', 'entities'), ('level', 'level'), ('physics', 'physics'), ('systems', 'systems'), ('tools', 'tools')],
-    hiddenimports=['pygame', 'PIL', 'PIL.Image'],
+    hiddenimports=['PIL._imaging', 'pygame'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

@@ -21,7 +21,8 @@ class CheckpointManager:
     def __init__(self):
         self.active_checkpoint_id = None
         self.snapshot = None
-        self.checkpoint_y = None  # 存档点 Y 坐标，用于岩浆淹没检测
+        self.checkpoint_y = None
+        self.snapshot_locked = False  # True=被淹没，不可新存档但可读档
 
     def has_checkpoint(self):
         return self.snapshot is not None
@@ -30,13 +31,16 @@ class CheckpointManager:
         self.active_checkpoint_id = None
         self.snapshot = None
         self.checkpoint_y = None
+        self.snapshot_locked = False
 
     # ================================================================
     #  激活存档点
     # ================================================================
 
     def activate_checkpoint(self, level, stick, checkpoint_item):
-        """激活存档点。返回 True 表示是新激活（与当前不同），False 表示重复触发。"""
+        """激活存档点。锁定状态下拒绝新存档。返回 True=新激活，False=重复或拒绝。"""
+        if self.snapshot_locked:
+            return False
         is_new = (self.active_checkpoint_id != checkpoint_item.checkpoint_id)
         self.active_checkpoint_id = checkpoint_item.checkpoint_id
         self.checkpoint_y = checkpoint_item.y + checkpoint_item.height
@@ -44,9 +48,9 @@ class CheckpointManager:
         return is_new
 
     def check_lava_submerged(self, lava_y):
-        """如果岩浆淹没存档点，清除存档"""
+        """如果岩浆淹没存档点，锁定存档（不可新存，仍可读档恢复）"""
         if self.checkpoint_y is not None and lava_y <= self.checkpoint_y:
-            self.clear()
+            self.snapshot_locked = True
             return True
         return False
 

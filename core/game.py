@@ -263,11 +263,11 @@ class Game:
         self._prev_stick_state = None
         self.state = GameState.PLAYING
 
-        # BGM 只首次进入游戏时播放，重新开始时接着播不打断
+        # BGM 循环播放
         if not self._game_bgm_started:
             self._game_bgm_started = True
             self.sound_mgr.stop_bgm()
-            self.sound_mgr.play_bgm("arts/sounds/main_theme/celeste_mello.mp3", loop=False)
+            self.sound_mgr.play_bgm("arts/sounds/main_theme/celeste_mello.mp3", loop=True)
         self.sound_mgr.play("game_start")
 
     def _handle_death(self, cause="lava"):
@@ -294,17 +294,18 @@ class Game:
             self.start_game()
 
     def next_level(self):
-        """进入下一关（level1 → level2 → level3 ...）"""
+        """进入下一关，最后一关后回到 level1"""
         import re, os
+        from data_config import get_path
         match = re.match(r"level(\d+)", self.current_level_id)
         if match:
             n = int(match.group(1)) + 1
             next_id = f"level{n}"
-            if os.path.exists(f"maps/{next_id}"):
+            if os.path.exists(get_path(f"maps/{next_id}")):
                 self.current_level_id = next_id
-                self.start_game()
-                return
-        print(f"[Game] 没有下一关: {self.current_level_id}")
+            else:
+                self.current_level_id = "level1"
+            self.start_game()
 
     def _restore_from_checkpoint(self):
         """从存档点恢复"""
@@ -386,10 +387,13 @@ class Game:
             elif evt == "toggle_debug":
                 self.debug = not self.debug
             elif evt == "restart":
-                if self.state in (GameState.WIN, GameState.DEAD):
-                    self._restart_or_checkpoint()
-                elif self.state == GameState.PLAYING:
-                    self._restart_or_checkpoint()
+                pass  # 等 KEYUP 判断短按还是长按
+            elif evt == "restart_short":
+                held = self.input_mgr.r_held_seconds()
+                if held >= 5.0:
+                    self.start_game()  # 长按 5s → 从头开始
+                elif self.state in (GameState.WIN, GameState.DEAD, GameState.PLAYING):
+                    self._restart_or_checkpoint()  # 短按 → 读档
 
     def queue_event(self, evt):
         """将事件加入队列"""
