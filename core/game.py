@@ -389,12 +389,9 @@ class Game:
             elif evt == "toggle_debug":
                 self.debug = not self.debug
             elif evt == "restart":
-                pass  # 等 KEYUP 判断短按还是长按
+                pass  # 按下时开始计时，更新循环检测长按
             elif evt == "restart_short":
-                held = self.input_mgr.r_held_seconds()
-                if held >= 5.0:
-                    self.start_game()  # 长按 5s → 从头开始
-                elif self.state in (GameState.WIN, GameState.DEAD, GameState.PLAYING):
+                if self.state in (GameState.WIN, GameState.DEAD, GameState.PLAYING):
                     self._restart_or_checkpoint()  # 短按 → 读档
 
     def queue_event(self, evt):
@@ -471,6 +468,16 @@ class Game:
             smooth = min(1.0, 8.0 * dt)  # 平滑系数
             self.camera.bob_x += (target_x - self.camera.bob_x) * smooth
             self.camera.bob_y += (target_y - self.camera.bob_y) * smooth
+
+        # 长按 R 检测 — 5 秒自动重置 + 进度提示
+        if self.input_mgr.r_press_time is not None:
+            held = self.input_mgr.r_held_seconds()
+            if held >= 5.0:
+                self.input_mgr.r_press_time = None
+                self.start_game()
+                return
+            elif held > 0.5:
+                self._spawn_bubble_at_stick("reset")
 
         # 屏幕震动衰减
         if self.screen_shake > 0:
