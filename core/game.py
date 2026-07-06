@@ -463,13 +463,14 @@ class Game:
             self.camera.set_target(self.stick.center_y)
         self.camera.update(dt)
 
-        # 海上漂浮晃动 — 存入 bob_x/bob_y，渲染时偏移
+        # 海上漂浮晃动 — 平滑过渡到目标值
         self.sea_bob.update(dt)
         if self.level:
             stick_y = self.stick.get_anchor_endpoint()[1] if self.stick.state == "anchored" else self.stick.center_y
-            bob_x, bob_y = self.sea_bob.get_offset(stick_y, self.level.lava_y + 90)
-            self.camera.bob_x = bob_x
-            self.camera.bob_y = bob_y
+            target_x, target_y = self.sea_bob.get_offset(stick_y, self.level.lava_y + 90)
+            smooth = min(1.0, 8.0 * dt)  # 平滑系数
+            self.camera.bob_x += (target_x - self.camera.bob_x) * smooth
+            self.camera.bob_y += (target_y - self.camera.bob_y) * smooth
 
         # 屏幕震动衰减
         if self.screen_shake > 0:
@@ -576,13 +577,15 @@ class Game:
     def _draw_game_scene(self):
         """绘制游戏场景（背景直接在屏幕，关卡/粒子/棍子通过偏移表面实现横向漂浮）"""
         self._draw_bg()
-        camera_y = self.camera.y + self.camera.bob_y
+        camera_y = self.camera.y + int(self.camera.bob_y)
         bob_x = int(self.camera.bob_x)
-        tmp = pygame.Surface((SCREEN_WIDTH + abs(bob_x) * 2, SCREEN_HEIGHT), pygame.SRCALPHA)
+        # 固定宽度表面，bob_x 在 ±40 范围，80px 余量足够
+        pad = 80
+        tmp = pygame.Surface((SCREEN_WIDTH + pad * 2, SCREEN_HEIGHT), pygame.SRCALPHA)
         self.level.draw(tmp, camera_y, self.image_mgr.images, self.image_mgr)
         self.particles.draw(tmp, camera_y)
         self.stick.draw(tmp, camera_y, self.image_mgr.images)
-        self.screen.blit(tmp, (bob_x, 0))
+        self.screen.blit(tmp, (bob_x - pad, 0))
 
     def _draw_menu_bg(self):
         """菜单背景：天空 + 蓝色海难色调"""
