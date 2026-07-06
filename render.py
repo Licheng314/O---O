@@ -257,12 +257,12 @@ BUBBLE_CONFIG = {
         "texts": ["RESET..."],
         "color": "danger_red",
         "glow_color": "lava_orange",
-        "lifetime": 0.8,
-        "float_speed": 20,
+        "lifetime": 0.5,
+        "float_speed": 0,
         "start_scale": 0.8,
-        "peak_scale": 1.4,
+        "peak_scale": 1.2,
         "font_key": "bubble_large",
-        "shake": True,
+        "shake": False,
     },
 }
 
