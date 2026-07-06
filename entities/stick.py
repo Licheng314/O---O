@@ -109,8 +109,9 @@ class Stick:
                 e0 = (self.anchor_x - self.length * dx,
                       self.anchor_y - self.length * dy)
         else:
-            e0 = (self.center_x + hl * dx, self.center_y + hl * dy)
-            e1 = (self.center_x - hl * dx, self.center_y - hl * dy)
+            # 保持与 anchor_side=0 一致的端点方向：e0 = center - hl*d, e1 = center + hl*d
+            e0 = (self.center_x - hl * dx, self.center_y - hl * dy)
+            e1 = (self.center_x + hl * dx, self.center_y + hl * dy)
         return (e0, e1)
 
     def get_anchor_endpoint(self):
