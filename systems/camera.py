@@ -35,7 +35,7 @@ class Camera:
         self.target_y = y
         self.map_height = map_height
         self.map_width = map_width
-        self.smooth_speed = 4.0  # 平滑系数
+        self.smooth_speed = 2.0  # 平滑系数（越小越柔和）
         self.dead_zone = dead_zone
         self.bob_x = 0.0
         self.bob_y = 0.0

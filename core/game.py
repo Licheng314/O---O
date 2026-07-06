@@ -472,7 +472,7 @@ class Game:
             # 漂移不超过摄像机到地图边缘的距离
             max_bob = min(20.0, self.camera.x + 120, self.level.width + 120 - self.camera.x)
             target_x = max(-max_bob, min(target_x, max_bob))
-            smooth = min(1.0, 8.0 * dt)
+            smooth = min(1.0, 3.0 * dt)  # 漂浮也平滑
             self.camera.bob_x += (target_x - self.camera.bob_x) * smooth
             self.camera.bob_y += (target_y - self.camera.bob_y) * smooth
 
