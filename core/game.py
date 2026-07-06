@@ -464,12 +464,15 @@ class Game:
             self.camera.set_target(self.stick.center_x, self.stick.center_y)
         self.camera.update(dt)
 
-        # 海上漂浮晃动 — 平滑过渡到目标值
+        # 海上漂浮晃动 — 平滑过渡，夹紧到地图边界
         self.sea_bob.update(dt)
         if self.level:
             stick_y = self.stick.get_anchor_endpoint()[1] if self.stick.state == "anchored" else self.stick.center_y
             target_x, target_y = self.sea_bob.get_offset(stick_y, self.level.lava_y + 90)
-            smooth = min(1.0, 8.0 * dt)  # 平滑系数
+            # 漂移不超过摄像机到地图边缘的距离
+            max_bob = min(20.0, self.camera.x + 120, self.level.width + 120 - self.camera.x)
+            target_x = max(-max_bob, min(target_x, max_bob))
+            smooth = min(1.0, 8.0 * dt)
             self.camera.bob_x += (target_x - self.camera.bob_x) * smooth
             self.camera.bob_y += (target_y - self.camera.bob_y) * smooth
 

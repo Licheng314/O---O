@@ -48,11 +48,12 @@ class Camera:
         if abs(ideal_y - self.target_y) > self.dead_zone:
             self.target_y = ideal_y
 
-        # X 轴：棍子水平居中
-        ideal_x = follow_x - 400  # SCREEN_WIDTH/2
-        max_x = max(0, self.map_width - 800)
-        ideal_x = max(0.0, min(ideal_x, max_x))
-        if abs(ideal_x - self.target_x) > 40:
+        # X 轴：棍子居中，允许地图外 120px 余量
+        ideal_x = follow_x - 400
+        lo = -120.0
+        hi = max(0, self.map_width - 800) + 120
+        ideal_x = max(lo, min(ideal_x, hi))
+        if abs(ideal_x - self.target_x) > 30:
             self.target_x = ideal_x
 
     def update(self, dt):
@@ -144,7 +145,7 @@ class SeaCameraBob:
     # ═══════════════════════════════════════════════════════════════
     #  幅度参数
     # ═══════════════════════════════════════════════════════════════
-    MAX_X_AMP = 40.0   # 横向最大漂移像素（始终生效）
+    MAX_X_AMP = 20.0   # 横向最大漂移像素（始终生效）
     MAX_Y_AMP = 20.0   # 纵向最大漂移像素（靠近海浪时才达到）
 
     # ═══════════════════════════════════════════════════════════════
